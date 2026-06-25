@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KPI Management CMS
 
-## Getting Started
+Hệ thống quản trị KPI được xây dựng với Next.js 16, TypeScript và Tailwind CSS. Frontend kết nối tới NestJS API backend theo tài liệu `cms_api.md`.
 
-First, run the development server:
+## Tính năng
+
+- **Đăng nhập ADMIN** — Bearer token lưu trong `localStorage`
+- **Quản lý người dùng** — CRUD nhân viên và tài khoản
+- **Kỳ KPI** — Tạo, sửa, đóng kỳ KPI
+- **Loại sự kiện KPI** — Cấu hình cộng/trừ điểm
+- **Sự kiện KPI** — Ghi nhận cộng/trừ điểm cho nhân viên
+- **Kết quả KPI** — Xem bảng xếp hạng và thưởng theo kỳ
+- **Giao diện** — Hỗ trợ tiếng Việt, English, 中文 và chế độ sáng/tối
+
+## Yêu cầu
+
+- Node.js 20+
+- NestJS API backend chạy tại `API_PROXY_TARGET` (mặc định `http://localhost:1111/api`)
+- Frontend gọi `/api/*` qua Next.js proxy để tránh lỗi CORS trên trình duyệt
+
+## Bắt đầu
 
 ```bash
+# Cài đặt dependencies
+npm install
+
+# Sao chép biến môi trường
+cp .env.example .env.local
+
+# Chạy development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000/login](http://localhost:3000/login) để đăng nhập. Chỉ tài khoản có `role: ADMIN` mới truy cập được `/admin`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tài khoản mặc định (theo seed backend): `admin@example.com` / `Admin@123`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Cấu trúc dự án
 
-## Learn More
+```
+src/
+├── app/
+│   ├── admin/              # Trang quản trị KPI
+│   └── login/              # Đăng nhập
+├── components/
+│   ├── cms/                # UI patterns (DataTable, PageHeader...)
+│   ├── layout/             # Admin layout, sidebar, topbar
+│   └── ui/                 # Primitives (Button, Input...)
+├── features/
+│   ├── auth/               # Đăng nhập, AuthProvider
+│   ├── users/              # Quản lý người dùng
+│   └── kpi/                # KPI periods, events, results...
+├── lib/
+│   ├── api/                # Axios client + error helpers
+│   └── auth/               # Token storage, requireAdmin
+└── types/
+    └── api.ts              # Types theo cms_api.md
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Tài liệu
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `cms_api.md` — Đặc tả API backend
+- `coding_rules.md` — Quy ước code frontend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js 16](https://nextjs.org/) — App Router
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Axios](https://axios-http.com/) — HTTP client
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) — Form validation
+- [Lucide React](https://lucide.dev/) — Icons
