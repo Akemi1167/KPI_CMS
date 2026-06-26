@@ -119,12 +119,11 @@ export function EmployeeKpiInfoPage() {
               }`}
             >
               {item.label}
-              <Badge
-                variant={item.id === "BONUS" ? "success" : "danger"}
-                className="ml-2"
-              >
-                {item.id}
-              </Badge>
+              <span className="ml-2">
+                <Badge variant={item.id === "BONUS" ? "success" : "danger"}>
+                  {item.id}
+                </Badge>
+              </span>
             </button>
           ))}
         </div>

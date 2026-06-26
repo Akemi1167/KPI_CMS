@@ -160,6 +160,27 @@ export function KpiResultsPage() {
       <PageHeader
         title={dict.kpiResults.title}
         description={dict.kpiResults.description}
+        action={
+          <div className="flex flex-wrap justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={handleExport}
+              disabled={!periodId || exportLoading}
+              type="button"
+              title={!periodId ? dict.kpiResults.exportExcelHint : undefined}
+            >
+              <FileSpreadsheet size={14} />
+              {exportLoading ? dict.kpiResults.exportingExcel : dict.kpiResults.exportExcel}
+            </Button>
+            <Button
+              onClick={() => periodId && setAction({ type: "calculatePeriod", periodId })}
+              disabled={!periodId || selectedPeriod?.status === "LOCKED"}
+              type="button"
+            >
+              {dict.kpiResults.batchCalculate}
+            </Button>
+          </div>
+        }
       />
 
       <div className="mb-4 flex flex-wrap gap-3">
@@ -188,23 +209,6 @@ export function KpiResultsPage() {
           />
         </div>
         <div className="flex flex-wrap items-end gap-2">
-          <Button
-            variant="secondary"
-            onClick={handleExport}
-            disabled={!periodId || exportLoading}
-            type="button"
-            title={!periodId ? dict.kpiResults.exportExcelHint : undefined}
-          >
-            <FileSpreadsheet size={14} />
-            {exportLoading ? dict.kpiResults.exportingExcel : dict.kpiResults.exportExcel}
-          </Button>
-          <Button
-            onClick={() => periodId && setAction({ type: "calculatePeriod", periodId })}
-            disabled={!periodId || selectedPeriod?.status === "LOCKED"}
-            type="button"
-          >
-            {dict.kpiResults.batchCalculate}
-          </Button>
           {userId && periodId && (
             <Link href={`/admin/kpi-results/preview?userId=${userId}&periodId=${periodId}`}>
               <Button variant="secondary" type="button">

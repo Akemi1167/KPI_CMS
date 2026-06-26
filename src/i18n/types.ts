@@ -193,6 +193,16 @@ export type Dictionary = {
     deactivate: string;
     deactivateTitle: string;
     deactivateConfirm: string;
+    softDelete: string;
+    softDeleteTitle: string;
+    softDeleteConfirm: string;
+    restore: string;
+    restoreTitle: string;
+    restoreConfirm: string;
+    includeDeleted: string;
+    statusDeleted: string;
+    statusInactive: string;
+    deletedReadOnly: string;
   };
   kpiEvents: {
     title: string;

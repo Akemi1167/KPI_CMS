@@ -39,6 +39,7 @@ export interface KpiEventType {
   eventKind: KpiEventKind;
   defaultPoints: number;
   isActive: boolean;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }

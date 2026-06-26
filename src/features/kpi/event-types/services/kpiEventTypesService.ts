@@ -9,6 +9,7 @@ import type {
 
 export interface KpiEventTypeQuery extends PaginationQuery {
   eventKind?: KpiEventKind;
+  includeDeleted?: boolean;
 }
 
 export interface CreateKpiEventTypePayload {
@@ -42,5 +43,13 @@ export const kpiEventTypesService = {
 
   deactivate(id: string) {
     return apiClient.patch<unknown, ApiResponse<KpiEventType>>(`/kpi-event-types/${id}/deactivate`);
+  },
+
+  softDelete(id: string) {
+    return apiClient.patch<unknown, ApiResponse<KpiEventType>>(`/kpi-event-types/${id}/soft-delete`);
+  },
+
+  restore(id: string) {
+    return apiClient.patch<unknown, ApiResponse<KpiEventType>>(`/kpi-event-types/${id}/restore`);
   },
 };

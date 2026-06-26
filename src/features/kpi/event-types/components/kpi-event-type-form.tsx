@@ -22,6 +22,7 @@ export function KpiEventTypeForm({ eventType }: KpiEventTypeFormProps) {
   const router = useRouter();
   const { dict } = useTranslation();
   const isEditing = Boolean(eventType);
+  const isDeleted = Boolean(eventType?.deletedAt);
 
   const [code, setCode] = useState(eventType?.code ?? "");
   const [name, setName] = useState(eventType?.name ?? "");
@@ -60,6 +61,12 @@ export function KpiEventTypeForm({ eventType }: KpiEventTypeFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl">
+      {isDeleted && (
+        <div className="mb-4 rounded-md border border-warning/30 bg-warning-subtle px-4 py-3 text-[13px] text-warning">
+          {dict.kpiEventTypes.deletedReadOnly}
+        </div>
+      )}
+
       {error && (
         <div className="mb-4 rounded-md border border-danger/30 bg-danger-subtle px-4 py-3 text-[13px] text-danger">
           {error}
@@ -73,18 +80,21 @@ export function KpiEventTypeForm({ eventType }: KpiEventTypeFormProps) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             required
+            disabled={isDeleted}
           />
           <Input
             label={dict.common.name}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            disabled={isDeleted}
           />
           <Select
             label={dict.kpiEventTypes.fieldKind}
             name="eventKind"
             value={eventKind}
             onChange={(e) => setEventKind(e.target.value as KpiEventKind)}
+            disabled={isDeleted}
             options={[
               { value: "BONUS", label: dict.kpiEventTypes.bonusOption },
               { value: "PENALTY", label: dict.kpiEventTypes.penaltyOption },
@@ -96,6 +106,7 @@ export function KpiEventTypeForm({ eventType }: KpiEventTypeFormProps) {
             value={defaultPoints}
             onChange={(e) => setDefaultPoints(e.target.value)}
             helperText={dict.kpiEventTypes.pointsHelper}
+            disabled={isDeleted}
           />
         </div>
         <Textarea
@@ -103,6 +114,7 @@ export function KpiEventTypeForm({ eventType }: KpiEventTypeFormProps) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
+          disabled={isDeleted}
         />
       </FormSection>
 
@@ -112,7 +124,7 @@ export function KpiEventTypeForm({ eventType }: KpiEventTypeFormProps) {
             {dict.common.cancel}
           </Button>
         </Link>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading || isDeleted}>
           {loading
             ? dict.common.saving
             : isEditing

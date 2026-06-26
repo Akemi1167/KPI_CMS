@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Pencil, Plus, Ban } from "lucide-react";
+import { Ban, Pencil, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { kpiEventTypesService } from "@/features/kpi/event-types/services/kpiEventTypesService";
 import { PageHeader } from "@/components/cms/page-header";
 import { PaginationBar } from "@/components/common/pagination-bar";
@@ -24,14 +24,21 @@ import { formatKpiPoint } from "@/lib/formatters/kpi";
 import { useTranslation } from "@/providers/preferences-provider";
 import type { KpiEventKind, KpiEventType, PaginatedMeta } from "@/types/api";
 
+type ActionType = "deactivate" | "softDelete" | "restore";
+
+function isSoftDeleted(item: KpiEventType): boolean {
+  return item.deletedAt != null;
+}
+
 export function KpiEventTypesPage() {
   const { dict } = useTranslation();
   const [items, setItems] = useState<KpiEventType[]>([]);
   const [meta, setMeta] = useState<PaginatedMeta>({ page: 1, limit: 20, total: 0, totalPages: 0 });
   const [eventKind, setEventKind] = useState<string>("");
+  const [includeDeleted, setIncludeDeleted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [deactivateTarget, setDeactivateTarget] = useState<KpiEventType | null>(null);
+  const [action, setAction] = useState<{ type: ActionType; item: KpiEventType } | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   const load = useCallback(
@@ -43,6 +50,7 @@ export function KpiEventTypesPage() {
           page,
           limit: 20,
           eventKind: (eventKind as KpiEventKind) || undefined,
+          includeDeleted: includeDeleted || undefined,
         });
         setItems(res.data);
         setMeta(res.meta);
@@ -52,25 +60,60 @@ export function KpiEventTypesPage() {
         setLoading(false);
       }
     },
-    [eventKind, dict.errors],
+    [eventKind, includeDeleted, dict.errors],
   );
 
   useEffect(() => {
     load(1);
   }, [load]);
 
-  async function handleDeactivate() {
-    if (!deactivateTarget) return;
+  async function handleAction() {
+    if (!action) return;
     setActionLoading(true);
+    setError("");
     try {
-      await kpiEventTypesService.deactivate(deactivateTarget.id);
-      setDeactivateTarget(null);
+      switch (action.type) {
+        case "deactivate":
+          await kpiEventTypesService.deactivate(action.item.id);
+          break;
+        case "softDelete":
+          await kpiEventTypesService.softDelete(action.item.id);
+          break;
+        case "restore":
+          await kpiEventTypesService.restore(action.item.id);
+          break;
+      }
+      setAction(null);
       await load(meta.page);
     } catch (err) {
       setError(getApiErrorMessage(err, dict.errors));
     } finally {
       setActionLoading(false);
     }
+  }
+
+  const confirmTitle =
+    action?.type === "deactivate"
+      ? dict.kpiEventTypes.deactivateTitle
+      : action?.type === "softDelete"
+        ? dict.kpiEventTypes.softDeleteTitle
+        : dict.kpiEventTypes.restoreTitle;
+
+  const confirmDescription =
+    action?.type === "deactivate"
+      ? dict.kpiEventTypes.deactivateConfirm
+      : action?.type === "softDelete"
+        ? dict.kpiEventTypes.softDeleteConfirm
+        : dict.kpiEventTypes.restoreConfirm;
+
+  function renderStatusBadge(item: KpiEventType) {
+    if (isSoftDeleted(item)) {
+      return <Badge variant="danger">{dict.kpiEventTypes.statusDeleted}</Badge>;
+    }
+    if (!item.isActive) {
+      return <Badge variant="inactive">{dict.kpiEventTypes.statusInactive}</Badge>;
+    }
+    return <Badge variant="success">{dict.common.active}</Badge>;
   }
 
   return (
@@ -88,17 +131,29 @@ export function KpiEventTypesPage() {
         }
       />
 
-      <div className="mb-4 w-48">
-        <Select
-          name="eventKind"
-          value={eventKind}
-          onChange={(e) => setEventKind(e.target.value)}
-          options={[
-            { value: "", label: dict.kpiEventTypes.allKinds },
-            { value: "BONUS", label: "BONUS" },
-            { value: "PENALTY", label: "PENALTY" },
-          ]}
-        />
+      <div className="mb-4 flex flex-wrap items-end gap-3">
+        <div className="w-48">
+          <Select
+            label={dict.kpiEventTypes.fieldKind}
+            name="eventKind"
+            value={eventKind}
+            onChange={(e) => setEventKind(e.target.value)}
+            options={[
+              { value: "", label: dict.kpiEventTypes.allKinds },
+              { value: "BONUS", label: "BONUS" },
+              { value: "PENALTY", label: "PENALTY" },
+            ]}
+          />
+        </div>
+        <label className="flex items-center gap-2 pb-2 text-[13px] text-text-secondary">
+          <input
+            type="checkbox"
+            checked={includeDeleted}
+            onChange={(e) => setIncludeDeleted(e.target.checked)}
+            className="rounded border-border-default"
+          />
+          {dict.kpiEventTypes.includeDeleted}
+        </label>
       </div>
 
       {error && (
@@ -148,30 +203,51 @@ export function KpiEventTypesPage() {
                   >
                     {formatKpiPoint(item.defaultPoints)}
                   </DataTableCell>
-                  <DataTableCell>
-                    <Badge variant={item.isActive ? "success" : "inactive"}>
-                      {item.isActive ? dict.common.active : dict.common.inactive}
-                    </Badge>
-                  </DataTableCell>
+                  <DataTableCell>{renderStatusBadge(item)}</DataTableCell>
                   <DataTableCell align="right">
                     <div className="flex justify-end gap-1">
-                      <Link href={`/admin/kpi-event-types/${item.id}/edit`}>
-                        <Button variant="ghost" size="sm">
-                          <Pencil size={14} />
-                          {dict.common.edit}
-                        </Button>
-                      </Link>
-                      {item.isActive && (
+                      {!isSoftDeleted(item) && (
+                        <Link href={`/admin/kpi-event-types/${item.id}/edit`}>
+                          <Button variant="ghost" size="sm" type="button">
+                            <Pencil size={14} />
+                            {dict.common.edit}
+                          </Button>
+                        </Link>
+                      )}
+                      {isSoftDeleted(item) ? (
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-danger"
-                          onClick={() => setDeactivateTarget(item)}
+                          onClick={() => setAction({ type: "restore", item })}
                           type="button"
                         >
-                          <Ban size={14} />
-                          {dict.kpiEventTypes.deactivate}
+                          <RotateCcw size={14} />
+                          {dict.kpiEventTypes.restore}
                         </Button>
+                      ) : (
+                        <>
+                          {item.isActive && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setAction({ type: "deactivate", item })}
+                              type="button"
+                            >
+                              <Ban size={14} />
+                              {dict.kpiEventTypes.deactivate}
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-danger"
+                            onClick={() => setAction({ type: "softDelete", item })}
+                            type="button"
+                          >
+                            <Trash2 size={14} />
+                            {dict.kpiEventTypes.softDelete}
+                          </Button>
+                        </>
                       )}
                     </div>
                   </DataTableCell>
@@ -183,15 +259,15 @@ export function KpiEventTypesPage() {
       </DataTable>
 
       <ConfirmDialog
-        open={Boolean(deactivateTarget)}
-        title={dict.kpiEventTypes.deactivateTitle}
-        description={dict.kpiEventTypes.deactivateConfirm}
+        open={Boolean(action)}
+        title={confirmTitle}
+        description={confirmDescription}
         confirmLabel={dict.common.confirm}
         cancelLabel={dict.common.cancel}
-        variant="danger"
+        variant={action?.type === "restore" ? "default" : "danger"}
         loading={actionLoading}
-        onConfirm={handleDeactivate}
-        onCancel={() => setDeactivateTarget(null)}
+        onConfirm={handleAction}
+        onCancel={() => setAction(null)}
       />
     </div>
   );
