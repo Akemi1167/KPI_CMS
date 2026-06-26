@@ -87,6 +87,7 @@ export type Dictionary = {
       description: string;
       eventTypesTitle: string;
       eventTypesDesc: string;
+      fieldExplanation: string;
       guideTitle: string;
       guideDesc: string;
       formulaTitle: string;
@@ -225,6 +226,9 @@ export type Dictionary = {
     title: string;
     description: string;
     batchCalculate: string;
+    exportExcel: string;
+    exportingExcel: string;
+    exportExcelHint: string;
     empty: string;
     finalScore: string;
     rating: string;
@@ -251,7 +255,6 @@ export type Dictionary = {
       previewTitle: string;
       back: string;
       notCalculated: string;
-      bonusCappedNote: string;
       tabBonus: string;
       tabPenalty: string;
       tabStats: string;

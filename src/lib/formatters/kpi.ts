@@ -21,7 +21,9 @@ export function getRatingColorClass(rating: KpiRating): string {
       return "text-info";
     case "Đạt":
       return "text-warning";
-    case "Không thưởng":
+    case "Khá":
+      return "text-warning";
+    case "Không đạt":
       return "text-text-muted";
     default:
       return "text-text-secondary";

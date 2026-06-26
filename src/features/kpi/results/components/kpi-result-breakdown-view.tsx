@@ -86,7 +86,7 @@ export function KpiResultBreakdownView({
   currentUserId,
   employeeMode = false,
 }: KpiResultBreakdownViewProps) {
-  const { dict, locale, t } = useTranslation();
+  const { dict, locale } = useTranslation();
   const b = dict.kpiResults.breakdown;
   const [data, setData] = useState<KpiResultBreakdown | null>(null);
   const [loading, setLoading] = useState(true);
@@ -192,11 +192,6 @@ export function KpiResultBreakdownView({
           <p className="mt-1 text-[20px] font-semibold text-success">
             {formatKpiPoint(summary.bonusPoints)}
           </p>
-          {summary.bonusCapped && (
-            <p className="mt-1 text-[11px] text-warning">
-              {t(b.bonusCappedNote, { cap: summary.bonusCap })}
-            </p>
-          )}
         </SurfaceCard>
         <SurfaceCard className="p-4">
           <p className="text-[12px] text-text-muted">{b.penalty}</p>

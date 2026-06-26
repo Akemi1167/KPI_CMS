@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api/apiClient";
+import { downloadApiBlob } from "@/lib/api/downloadBlob";
 import type { ApiResponse, KpiResult, KpiResultBreakdown, PaginatedResponse, PaginationQuery } from "@/types/api";
 
 export interface KpiResultQuery extends PaginationQuery {
@@ -42,5 +43,12 @@ export const kpiResultsService = {
 
   getBreakdownById(id: string) {
     return apiClient.get<unknown, ApiResponse<KpiResultBreakdown>>(`/kpi-results/${id}/breakdown`);
+  },
+
+  exportReport(periodId: string) {
+    return downloadApiBlob("/kpi-results/export", {
+      params: { periodId },
+      fallbackFilename: `bao-cao-kpi-${periodId}.xlsx`,
+    });
   },
 };

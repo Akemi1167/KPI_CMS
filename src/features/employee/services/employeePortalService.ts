@@ -1,16 +1,18 @@
 import { employeeApiClient } from "@/lib/api/employeeApiClient";
 import type {
   ApiResponse,
-  KpiEventType,
   KpiPeriod,
   KpiResult,
   KpiResultBreakdown,
   PaginatedResponse,
+  PublicKpiCatalog,
 } from "@/types/api";
 
 export const employeePortalService = {
-  getEventTypes() {
-    return employeeApiClient.get<unknown, PaginatedResponse<KpiEventType>>("/kpi-event-types");
+  getEventTypes(params?: { eventKind?: "BONUS" | "PENALTY" }) {
+    return employeeApiClient.get<unknown, ApiResponse<PublicKpiCatalog>>("/kpi-event-types", {
+      params,
+    });
   },
 
   getPeriods(params?: { page?: number; limit?: number; sortOrder?: "asc" | "desc" }) {

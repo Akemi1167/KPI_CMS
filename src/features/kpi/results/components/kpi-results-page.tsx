@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye, FileSpreadsheet } from "lucide-react";
 import { kpiResultsService } from "@/features/kpi/results/services/kpiResultsService";
 import { kpiPeriodsService } from "@/features/kpi/periods/services/kpiPeriodsService";
 import { usersService } from "@/features/users/services/usersService";
@@ -44,6 +44,7 @@ export function KpiResultsPage() {
     periodId?: string;
   } | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -82,6 +83,19 @@ export function KpiResultsPage() {
   useEffect(() => {
     load(1);
   }, [load]);
+
+  async function handleExport() {
+    if (!periodId) return;
+    setExportLoading(true);
+    setError("");
+    try {
+      await kpiResultsService.exportReport(periodId);
+    } catch (err) {
+      setError(getApiErrorMessage(err, dict.errors));
+    } finally {
+      setExportLoading(false);
+    }
+  }
 
   async function handleAction() {
     if (!action) return;
@@ -146,17 +160,6 @@ export function KpiResultsPage() {
       <PageHeader
         title={dict.kpiResults.title}
         description={dict.kpiResults.description}
-        action={
-          periodId ? (
-            <Button
-              onClick={() => setAction({ type: "calculatePeriod", periodId })}
-              disabled={selectedPeriod?.status === "LOCKED"}
-              type="button"
-            >
-              {dict.kpiResults.batchCalculate}
-            </Button>
-          ) : undefined
-        }
       />
 
       <div className="mb-4 flex flex-wrap gap-3">
@@ -184,7 +187,24 @@ export function KpiResultsPage() {
             ]}
           />
         </div>
-        <div className="flex items-end gap-2">
+        <div className="flex flex-wrap items-end gap-2">
+          <Button
+            variant="secondary"
+            onClick={handleExport}
+            disabled={!periodId || exportLoading}
+            type="button"
+            title={!periodId ? dict.kpiResults.exportExcelHint : undefined}
+          >
+            <FileSpreadsheet size={14} />
+            {exportLoading ? dict.kpiResults.exportingExcel : dict.kpiResults.exportExcel}
+          </Button>
+          <Button
+            onClick={() => periodId && setAction({ type: "calculatePeriod", periodId })}
+            disabled={!periodId || selectedPeriod?.status === "LOCKED"}
+            type="button"
+          >
+            {dict.kpiResults.batchCalculate}
+          </Button>
           {userId && periodId && (
             <Link href={`/admin/kpi-results/preview?userId=${userId}&periodId=${periodId}`}>
               <Button variant="secondary" type="button">

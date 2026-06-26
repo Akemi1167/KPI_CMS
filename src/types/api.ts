@@ -1,7 +1,7 @@
 export type UserRole = "ADMIN" | "EMPLOYEE";
 export type KpiEventKind = "BONUS" | "PENALTY";
 export type KpiPeriodStatus = "OPEN" | "CLOSED" | "LOCKED";
-export type KpiRating = "Xuất sắc" | "Tốt" | "Đạt" | "Không thưởng";
+export type KpiRating = "Xuất sắc" | "Tốt" | "Đạt" | "Khá" | "Không đạt";
 
 export interface User {
   id: string;
@@ -111,6 +111,25 @@ export interface LoginResponse {
   user: User;
 }
 
+export interface PublicKpiEventType {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+  explanation: string;
+  eventKind: KpiEventKind;
+  defaultPoints: number;
+}
+
+export interface PublicKpiCatalog {
+  items: PublicKpiEventType[];
+  grouped: {
+    bonus: PublicKpiEventType[];
+    penalty: PublicKpiEventType[];
+  };
+  total: number;
+}
+
 export interface KpiBreakdownSummary {
   baseScore: number;
   rawBonusPoints: number;
@@ -119,8 +138,6 @@ export interface KpiBreakdownSummary {
   finalScore: number;
   rating: KpiRating;
   rewardPercent: number;
-  bonusCapped: boolean;
-  bonusCap: number;
   totalEvents: number;
   bonusEventCount: number;
   penaltyEventCount: number;
