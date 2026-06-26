@@ -11,13 +11,31 @@ export const backendClient = axios.create({
 
 let cachedServiceToken: { token: string; expiresAt: number } | null = null;
 
+function resolveServiceCredentials(): { email: string; password: string } {
+  const email = process.env.API_SERVICE_EMAIL?.trim();
+  const password = process.env.API_SERVICE_PASSWORD;
+
+  if (email && password) {
+    return { email, password };
+  }
+
+  // Docker/Jenkins may inject empty strings when vars are unset — treat as missing.
+  return { email: "admin@example.com", password: "Admin@123" };
+}
+
+export function getBackendErrorMessage(error: unknown, fallback: string): string {
+  const data = (error as { response?: { data?: { message?: string | string[] } } })?.response
+    ?.data;
+  if (!data?.message) return fallback;
+  return Array.isArray(data.message) ? data.message.join(", ") : data.message;
+}
+
 export async function getServiceAccessToken(): Promise<string> {
   if (cachedServiceToken && Date.now() < cachedServiceToken.expiresAt) {
     return cachedServiceToken.token;
   }
 
-  const email = process.env.API_SERVICE_EMAIL ?? "admin@example.com";
-  const password = process.env.API_SERVICE_PASSWORD ?? "Admin@123";
+  const { email, password } = resolveServiceCredentials();
 
   const res = await backendClient.post<{ data: { accessToken: string } }>("/auth/login", {
     email,

@@ -1,4 +1,9 @@
-import { backendClient, requireEmployeeUser, unauthorizedResponse } from "@/lib/api/serverBackend";
+import {
+  backendClient,
+  getBackendErrorMessage,
+  requireEmployeeUser,
+  unauthorizedResponse,
+} from "@/lib/api/serverBackend";
 
 export async function GET(request: Request) {
   const employee = await requireEmployeeUser(request);
@@ -14,9 +19,7 @@ export async function GET(request: Request) {
 
     return Response.json(res.data);
   } catch (error: unknown) {
-    const message =
-      (error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-      "Failed to load event types";
+    const message = getBackendErrorMessage(error, "Failed to load event types");
     return Response.json({ statusCode: 500, message }, { status: 500 });
   }
 }

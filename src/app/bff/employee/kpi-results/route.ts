@@ -1,5 +1,6 @@
 import {
   backendClient,
+  getBackendErrorMessage,
   getServiceAccessToken,
   requireEmployeeUser,
   unauthorizedResponse,
@@ -28,9 +29,7 @@ export async function GET(request: Request) {
 
     return Response.json(res.data);
   } catch (error: unknown) {
-    const message =
-      (error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-      "Failed to load KPI results";
+    const message = getBackendErrorMessage(error, "Failed to load KPI results");
     return Response.json({ statusCode: 500, message }, { status: 500 });
   }
 }

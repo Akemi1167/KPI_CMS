@@ -1,6 +1,7 @@
 import {
   backendClient,
   forbiddenResponse,
+  getBackendErrorMessage,
   getServiceAccessToken,
   requireEmployeeUser,
   unauthorizedResponse,
@@ -28,9 +29,7 @@ export async function GET(
     return Response.json(res.data);
   } catch (error: unknown) {
     const status = (error as { response?: { status?: number } })?.response?.status;
-    const message =
-      (error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-      "Failed to load breakdown";
+    const message = getBackendErrorMessage(error, "Failed to load breakdown");
 
     return Response.json({ statusCode: status ?? 500, message }, { status: status ?? 500 });
   }

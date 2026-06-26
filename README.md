@@ -17,6 +17,7 @@ Hệ thống quản trị KPI được xây dựng với Next.js 16, TypeScript 
 - Node.js 20+
 - NestJS API backend chạy tại `API_PROXY_TARGET` (mặc định `http://localhost:1111/api`)
 - Frontend gọi `/api/*` qua Next.js proxy để tránh lỗi CORS trên trình duyệt
+- Cổng nhân viên (`/employee`) gọi `/bff/employee/*` — Next.js dùng tài khoản ADMIN service (`API_SERVICE_EMAIL` / `API_SERVICE_PASSWORD`) để truy vấn API thay mặt nhân viên
 
 ## Bắt đầu
 
