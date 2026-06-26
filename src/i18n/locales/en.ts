@@ -59,7 +59,6 @@ export const en: Dictionary = {
     password: "Password",
     signIn: "Sign in",
     signingIn: "Signing in...",
-    defaultAccount: "Default account (after seed): admin@example.com / Admin@123",
     accessDenied: "Account has no access or is inactive.",
     invalidCredentials: "Invalid email or password.",
   },

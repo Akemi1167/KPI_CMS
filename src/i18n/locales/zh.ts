@@ -59,7 +59,6 @@ export const zh: Dictionary = {
     password: "密码",
     signIn: "登录",
     signingIn: "登录中...",
-    defaultAccount: "默认账户（种子数据后）：admin@example.com / Admin@123",
     accessDenied: "账户无权访问或已被停用。",
     invalidCredentials: "邮箱或密码不正确。",
   },

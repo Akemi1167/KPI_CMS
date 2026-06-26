@@ -61,7 +61,6 @@ export type Dictionary = {
     password: string;
     signIn: string;
     signingIn: string;
-    defaultAccount: string;
     accessDenied: string;
     invalidCredentials: string;
   };

@@ -17,7 +17,7 @@ export function LoginForm() {
   const { user, isLoading } = useAuth();
   const { handleLogin, error, isSubmitting } = useLoginForm();
   const { dict } = useTranslation();
-  const [email, setEmail] = useState("admin@example.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
@@ -82,8 +82,6 @@ export function LoginForm() {
             {isSubmitting ? dict.auth.signingIn : dict.auth.signIn}
           </Button>
         </form>
-
-        <p className="mt-4 text-[12px] text-text-muted">{dict.auth.defaultAccount}</p>
       </SurfaceCard>
     </div>
   );

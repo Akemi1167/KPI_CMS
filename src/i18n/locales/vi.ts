@@ -59,7 +59,6 @@ export const vi: Dictionary = {
     password: "Mật khẩu",
     signIn: "Đăng nhập",
     signingIn: "Đang đăng nhập...",
-    defaultAccount: "Tài khoản mặc định (sau seed): admin@example.com / Admin@123",
     accessDenied: "Tài khoản không có quyền truy cập hoặc đã bị khóa.",
     invalidCredentials: "Email hoặc mật khẩu không đúng.",
   },
