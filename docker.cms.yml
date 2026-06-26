@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  cms:
+    image: kpi-cms:latest
+    ports:
+      - '3100:3000' # CMS exposed on 3100
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME}
+    networks:
+      - kpi_network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+networks:
+  kpi_network:
+    external: true
