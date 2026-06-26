@@ -6,8 +6,11 @@ services:
     ports:
       - '3100:3000' # CMS exposed on 3100
     environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-/api}
       - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME}
+      - API_PROXY_TARGET=${API_PROXY_TARGET}
+      - API_SERVICE_EMAIL=${API_SERVICE_EMAIL}
+      - API_SERVICE_PASSWORD=${API_SERVICE_PASSWORD}
     networks:
       - kpi_network
     deploy:

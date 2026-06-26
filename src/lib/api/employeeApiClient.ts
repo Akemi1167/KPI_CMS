@@ -1,9 +1,9 @@
 import axios from "axios";
 import { clearAuth, getAccessToken } from "@/lib/auth/tokenStorage";
 
-/** Client for employee BFF routes (Next.js API, not direct NestJS). */
+/** Client for employee BFF routes (Next.js, not proxied to NestJS). */
 export const employeeApiClient = axios.create({
-  baseURL: "/api/employee",
+  baseURL: "/bff/employee",
   timeout: 30000,
   headers: { "Content-Type": "application/json" },
 });
