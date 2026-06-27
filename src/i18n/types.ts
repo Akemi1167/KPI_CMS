@@ -54,6 +54,7 @@ export type Dictionary = {
   topbar: {
     greeting: string;
     signOut: string;
+    changePassword: string;
   };
   auth: {
     loginTitle: string;
@@ -63,6 +64,19 @@ export type Dictionary = {
     signingIn: string;
     accessDenied: string;
     invalidCredentials: string;
+  };
+  password: {
+    changeTitle: string;
+    changeDesc: string;
+    changeSubmit: string;
+    changing: string;
+    changeSuccess: string;
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+    minLength: string;
+    mismatch: string;
+    sameAsOld: string;
   };
   errors: {
     generic: string;
@@ -150,6 +164,11 @@ export type Dictionary = {
     fieldDepartment: string;
     defaultDepartment: string;
     createSubmit: string;
+    resetPassword: string;
+    resetPasswordTitle: string;
+    resetPasswordDesc: string;
+    resetPasswordSuccess: string;
+    resettingPassword: string;
   };
   kpiPeriods: {
     title: string;

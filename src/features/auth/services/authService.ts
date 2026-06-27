@@ -1,5 +1,11 @@
 import { apiClient } from "@/lib/api/apiClient";
-import type { ApiResponse, LoginResponse, User } from "@/types/api";
+import type {
+  ApiResponse,
+  ChangePasswordPayload,
+  LoginResponse,
+  MessageResponse,
+  User,
+} from "@/types/api";
 
 export const authService = {
   login(email: string, password: string) {
@@ -11,6 +17,10 @@ export const authService = {
 
   me() {
     return apiClient.get<unknown, ApiResponse<User>>("/auth/me");
+  },
+
+  changePassword(payload: ChangePasswordPayload) {
+    return apiClient.patch<unknown, ApiResponse<MessageResponse>>("/auth/change-password", payload);
   },
 
   health() {

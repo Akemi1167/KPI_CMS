@@ -112,6 +112,19 @@ export interface LoginResponse {
   user: User;
 }
 
+export interface MessageResponse {
+  message: string;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordPayload {
+  newPassword: string;
+}
+
 export interface PublicKpiEventType {
   id: string;
   code: string;

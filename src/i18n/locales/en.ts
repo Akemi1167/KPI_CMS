@@ -52,6 +52,7 @@ export const en: Dictionary = {
   topbar: {
     greeting: "Hello,",
     signOut: "Sign out",
+    changePassword: "Change password",
   },
   auth: {
     loginTitle: "CMS Login",
@@ -61,6 +62,19 @@ export const en: Dictionary = {
     signingIn: "Signing in...",
     accessDenied: "Account has no access or is inactive.",
     invalidCredentials: "Invalid email or password.",
+  },
+  password: {
+    changeTitle: "Change password",
+    changeDesc: "Enter your current password and a new password.",
+    changeSubmit: "Change password",
+    changing: "Changing...",
+    changeSuccess: "Password changed successfully.",
+    currentPassword: "Current password",
+    newPassword: "New password",
+    confirmPassword: "Confirm new password",
+    minLength: "Minimum 6 characters",
+    mismatch: "Password confirmation does not match.",
+    sameAsOld: "New password must differ from the current password.",
   },
   errors: {
     generic: "Something went wrong. Please try again.",
@@ -171,6 +185,11 @@ export const en: Dictionary = {
     fieldDepartment: "Department",
     defaultDepartment: "Software Development",
     createSubmit: "Create employee",
+    resetPassword: "Reset password",
+    resetPasswordTitle: "Reset password",
+    resetPasswordDesc: "Set a new password for {name}. The old password is not required.",
+    resetPasswordSuccess: "Password reset successfully.",
+    resettingPassword: "Resetting...",
   },
   kpiPeriods: {
     title: "KPI periods",

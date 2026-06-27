@@ -1,5 +1,13 @@
 import { apiClient } from "@/lib/api/apiClient";
-import type { ApiResponse, PaginatedResponse, PaginationQuery, User, UserRole } from "@/types/api";
+import type {
+  ApiResponse,
+  MessageResponse,
+  PaginatedResponse,
+  PaginationQuery,
+  ResetPasswordPayload,
+  User,
+  UserRole,
+} from "@/types/api";
 
 export interface UserQuery extends PaginationQuery {
   role?: UserRole;
@@ -49,5 +57,9 @@ export const usersService = {
 
   deactivate(id: string) {
     return apiClient.patch<unknown, ApiResponse<User>>(`/users/${id}/deactivate`);
+  },
+
+  resetPassword(id: string, payload: ResetPasswordPayload) {
+    return apiClient.patch<unknown, ApiResponse<MessageResponse>>(`/users/${id}/password`, payload);
   },
 };

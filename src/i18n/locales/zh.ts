@@ -52,6 +52,7 @@ export const zh: Dictionary = {
   topbar: {
     greeting: "您好，",
     signOut: "退出登录",
+    changePassword: "修改密码",
   },
   auth: {
     loginTitle: "CMS 登录",
@@ -61,6 +62,19 @@ export const zh: Dictionary = {
     signingIn: "登录中...",
     accessDenied: "账户无权访问或已被停用。",
     invalidCredentials: "邮箱或密码不正确。",
+  },
+  password: {
+    changeTitle: "修改密码",
+    changeDesc: "请输入当前密码和新密码。",
+    changeSubmit: "修改密码",
+    changing: "修改中...",
+    changeSuccess: "密码修改成功。",
+    currentPassword: "当前密码",
+    newPassword: "新密码",
+    confirmPassword: "确认新密码",
+    minLength: "至少 6 个字符",
+    mismatch: "确认密码不一致。",
+    sameAsOld: "新密码必须与当前密码不同。",
   },
   errors: {
     generic: "发生错误，请重试",
@@ -170,6 +184,11 @@ export const zh: Dictionary = {
     fieldDepartment: "部门",
     defaultDepartment: "软件开发部",
     createSubmit: "创建员工",
+    resetPassword: "重置密码",
+    resetPasswordTitle: "重置密码",
+    resetPasswordDesc: "为 {name} 设置新密码，无需知道旧密码。",
+    resetPasswordSuccess: "密码重置成功。",
+    resettingPassword: "重置中...",
   },
   kpiPeriods: {
     title: "KPI 周期",

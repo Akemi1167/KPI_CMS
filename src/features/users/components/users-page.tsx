@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, KeyRound } from "lucide-react";
 import { usersService } from "@/features/users/services/usersService";
+import { ResetPasswordDialog } from "@/features/users/components/reset-password-dialog";
 import { PageHeader } from "@/components/cms/page-header";
 import { PaginationBar } from "@/components/common/pagination-bar";
 import {
@@ -33,6 +34,7 @@ export function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [toggleTarget, setToggleTarget] = useState<User | null>(null);
+  const [resetTarget, setResetTarget] = useState<User | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   const load = useCallback(async (page = 1) => {
@@ -175,6 +177,15 @@ export function UsersPage() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => setResetTarget(user)}
+                        type="button"
+                      >
+                        <KeyRound size={14} />
+                        {dict.users.resetPassword}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setToggleTarget(user)}
                         type="button"
                       >
@@ -188,6 +199,8 @@ export function UsersPage() {
           </>
         ) : null}
       </DataTable>
+
+      <ResetPasswordDialog user={resetTarget} onClose={() => setResetTarget(null)} />
 
       <ConfirmDialog
         open={Boolean(toggleTarget)}

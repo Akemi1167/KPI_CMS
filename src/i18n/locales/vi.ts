@@ -52,6 +52,7 @@ export const vi: Dictionary = {
   topbar: {
     greeting: "Xin chào,",
     signOut: "Đăng xuất",
+    changePassword: "Đổi mật khẩu",
   },
   auth: {
     loginTitle: "Đăng nhập CMS",
@@ -61,6 +62,19 @@ export const vi: Dictionary = {
     signingIn: "Đang đăng nhập...",
     accessDenied: "Tài khoản không có quyền truy cập hoặc đã bị khóa.",
     invalidCredentials: "Email hoặc mật khẩu không đúng.",
+  },
+  password: {
+    changeTitle: "Đổi mật khẩu",
+    changeDesc: "Nhập mật khẩu hiện tại và mật khẩu mới cho tài khoản của bạn.",
+    changeSubmit: "Đổi mật khẩu",
+    changing: "Đang đổi...",
+    changeSuccess: "Đổi mật khẩu thành công.",
+    currentPassword: "Mật khẩu hiện tại",
+    newPassword: "Mật khẩu mới",
+    confirmPassword: "Xác nhận mật khẩu mới",
+    minLength: "Tối thiểu 6 ký tự",
+    mismatch: "Mật khẩu xác nhận không khớp.",
+    sameAsOld: "Mật khẩu mới phải khác mật khẩu hiện tại.",
   },
   errors: {
     generic: "Có lỗi xảy ra, vui lòng thử lại",
@@ -171,6 +185,11 @@ export const vi: Dictionary = {
     fieldDepartment: "Phòng ban",
     defaultDepartment: "Phòng Phát triển Phần mềm",
     createSubmit: "Tạo nhân viên",
+    resetPassword: "Đặt lại MK",
+    resetPasswordTitle: "Đặt lại mật khẩu",
+    resetPasswordDesc: "Đặt mật khẩu mới cho tài khoản {name}. Không cần biết mật khẩu cũ.",
+    resetPasswordSuccess: "Đặt lại mật khẩu thành công.",
+    resettingPassword: "Đang đặt lại...",
   },
   kpiPeriods: {
     title: "Kỳ KPI",
