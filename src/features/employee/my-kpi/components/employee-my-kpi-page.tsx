@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { getApiErrorMessage } from "@/lib/api/getApiErrorMessage";
 import { formatDate } from "@/i18n";
-import { formatBonusRate, formatKpiPoint, getRatingColorClass } from "@/lib/formatters/kpi";
+import { formatBonusRate, formatKpiPoint, formatPeriodTitle, getRatingColorClass } from "@/lib/formatters/kpi";
 import { useTranslation } from "@/providers/preferences-provider";
 import type { KpiPeriod, KpiResult, KpiResultBreakdown, PaginatedMeta } from "@/types/api";
 
@@ -34,6 +34,9 @@ export function EmployeeMyKpiPage() {
   const [results, setResults] = useState<KpiResult[]>([]);
   const [meta, setMeta] = useState<PaginatedMeta>({ page: 1, limit: 20, total: 0, totalPages: 0 });
   const [periods, setPeriods] = useState<KpiPeriod[]>([]);
+  const [extraPeriods, setExtraPeriods] = useState<
+    Record<string, { id: string; code: string; name: string }>
+  >({});
   const [periodId, setPeriodId] = useState("");
   const [breakdown, setBreakdown] = useState<KpiResultBreakdown | null>(null);
   const [loading, setLoading] = useState(true);
@@ -62,6 +65,27 @@ export function EmployeeMyKpiPage() {
         });
         setResults(res.data);
         setMeta(res.meta);
+        const missing = res.data.filter((result) => !result.period);
+        if (missing.length > 0) {
+          const details = await Promise.all(
+            missing.map((result) =>
+              employeePortalService.getBreakdownById(result.id).catch(() => null),
+            ),
+          );
+          const discovered: Record<string, { id: string; code: string; name: string }> = {};
+          for (const detail of details) {
+            const period = detail?.data.period;
+            if (!period?.id) continue;
+            discovered[period.id] = {
+              id: period.id,
+              code: period.code,
+              name: period.name,
+            };
+          }
+          if (Object.keys(discovered).length > 0) {
+            setExtraPeriods((current) => ({ ...current, ...discovered }));
+          }
+        }
         if (periodId) {
           const detail = await employeePortalService.getBreakdown(periodId);
           setBreakdown(detail.data);
@@ -89,7 +113,7 @@ export function EmployeeMyKpiPage() {
       <PageHeader title={my.title} description={my.description} />
 
       <div className="mb-4 flex flex-wrap gap-3">
-        <div className="w-48">
+        <div className="w-72">
           <Select
             label={dict.kpiEvents.period}
             name="periodId"
@@ -97,7 +121,10 @@ export function EmployeeMyKpiPage() {
             onChange={(e) => setPeriodId(e.target.value)}
             options={[
               { value: "", label: my.allPeriods },
-              ...periods.map((p) => ({ value: p.id, label: p.code })),
+              ...periods.map((p) => ({ value: p.id, label: formatPeriodTitle(p) })),
+              ...Object.values(extraPeriods)
+                .filter((period) => !periodMap[period.id])
+                .map((period) => ({ value: period.id, label: formatPeriodTitle(period) })),
             ]}
           />
         </div>
@@ -228,7 +255,12 @@ export function EmployeeMyKpiPage() {
             <DataTableBody>
               {results.map((result) => (
                 <DataTableRow key={result.id}>
-                  <DataTableCell>{periodMap[result.periodId]?.code ?? result.periodId}</DataTableCell>
+                  <DataTableCell>
+                    {formatPeriodTitle(result.period) ||
+                      formatPeriodTitle(periodMap[result.periodId]) ||
+                      formatPeriodTitle(extraPeriods[result.periodId]) ||
+                      "—"}
+                  </DataTableCell>
                   <DataTableCell className="font-medium">{result.finalScore}</DataTableCell>
                   <DataTableCell className="text-danger">
                     {formatKpiPoint(result.penaltyPoints)}

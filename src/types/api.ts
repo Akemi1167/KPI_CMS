@@ -81,6 +81,13 @@ export interface KpiResult {
   lockedAt?: string;
   createdAt: string;
   updatedAt: string;
+  period?: {
+    id: string;
+    code: string;
+    name: string;
+    year: number;
+    month: number;
+  } | null;
 }
 
 export interface PaginatedMeta {

@@ -13,6 +13,22 @@ export function formatPeriodLabel(year: number, month: number): string {
   return `KPI tháng ${String(month).padStart(2, "0")}/${year}`;
 }
 
+export function formatPeriodTitle(period?: {
+  code?: string;
+  name?: string;
+  year?: number;
+  month?: number;
+} | null): string {
+  if (!period) return "";
+  if (period.name && period.code && period.name !== period.code) {
+    return `${period.name} (${period.code})`;
+  }
+  if (period.name) return period.name;
+  if (period.code) return period.code;
+  if (period.year && period.month) return formatPeriodLabel(period.year, period.month);
+  return "";
+}
+
 export function getRatingColorClass(rating: KpiRating): string {
   switch (rating) {
     case "Xuất sắc":
