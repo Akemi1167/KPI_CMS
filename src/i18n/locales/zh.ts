@@ -131,11 +131,12 @@ export const zh: Dictionary = {
     },
     myKpi: {
       title: "我的 KPI",
-      description: "按周期查看 KPI 结果",
+      description: "查看本人 KPI 得分及扣分原因",
       empty: "暂无 KPI 结果。",
       allPeriods: "全部周期",
       viewDetail: "详情",
       forbidden: "您无权查看此结果。",
+      penaltyTitle: "加减分备注",
     },
   },
   dashboard: {
@@ -314,6 +315,7 @@ export const zh: Dictionary = {
       eventType: "事件类型",
       eventCount: "次数",
       runningScore: "累计得分",
+      reason: "原因",
       emptyBonus: "无加分事件。",
       emptyPenalty: "无扣分事件。",
       emptyStats: "暂无统计。",

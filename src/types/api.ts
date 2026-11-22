@@ -174,6 +174,7 @@ export interface KpiTimelineEntry {
   totalPoints: number;
   occurredAt: string;
   eventTypeSnapshot?: { code: string; name: string };
+  note?: string;
   runningRawBonusPoints: number;
   runningBonusPoints: number;
   runningPenaltyPoints: number;

@@ -132,11 +132,12 @@ export const vi: Dictionary = {
     },
     myKpi: {
       title: "KPI của tôi",
-      description: "Xem kết quả KPI các kỳ",
+      description: "Xem điểm KPI của bạn và nguyên nhân bị trừ điểm",
       empty: "Chưa có kết quả KPI nào.",
       allPeriods: "Tất cả kỳ",
       viewDetail: "Chi tiết",
       forbidden: "Bạn không có quyền xem kết quả này.",
+      penaltyTitle: "Ghi chú thưởng và phạt",
     },
   },
   dashboard: {
@@ -317,6 +318,7 @@ export const vi: Dictionary = {
       eventType: "Loại sự kiện",
       eventCount: "Số lần",
       runningScore: "Điểm lũy kế",
+      reason: "Nguyên nhân",
       emptyBonus: "Không có sự kiện cộng điểm.",
       emptyPenalty: "Không có sự kiện trừ điểm.",
       emptyStats: "Chưa có thống kê.",

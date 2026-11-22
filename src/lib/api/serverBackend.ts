@@ -9,20 +9,6 @@ export const backendClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-let cachedServiceToken: { token: string; expiresAt: number } | null = null;
-
-function resolveServiceCredentials(): { email: string; password: string } {
-  const email = process.env.API_SERVICE_EMAIL?.trim();
-  const password = process.env.API_SERVICE_PASSWORD;
-
-  if (email && password) {
-    return { email, password };
-  }
-
-  // Docker/Jenkins may inject empty strings when vars are unset — treat as missing.
-  return { email: "admin@example.com", password: "Admin@123" };
-}
-
 export function getBackendErrorMessage(error: unknown, fallback: string): string {
   const data = (error as { response?: { data?: { message?: string | string[] } } })?.response
     ?.data;
@@ -30,24 +16,17 @@ export function getBackendErrorMessage(error: unknown, fallback: string): string
   return Array.isArray(data.message) ? data.message.join(", ") : data.message;
 }
 
-export async function getServiceAccessToken(): Promise<string> {
-  if (cachedServiceToken && Date.now() < cachedServiceToken.expiresAt) {
-    return cachedServiceToken.token;
-  }
+export function getRequestAuthorization(request: Request): string | null {
+  const auth = request.headers.get("authorization");
+  if (!auth?.startsWith("Bearer ")) return null;
+  return auth;
+}
 
-  const { email, password } = resolveServiceCredentials();
-
-  const res = await backendClient.post<{ data: { accessToken: string } }>("/auth/login", {
-    email,
-    password,
-  });
-
-  const token = res.data.data.accessToken;
-  cachedServiceToken = {
-    token,
-    expiresAt: Date.now() + 23 * 60 * 60 * 1000,
-  };
-  return token;
+export function backendErrorResponse(error: unknown, fallback: string) {
+  const status =
+    (error as { response?: { status?: number } })?.response?.status ?? 500;
+  const message = getBackendErrorMessage(error, fallback);
+  return Response.json({ statusCode: status, message }, { status });
 }
 
 export async function getUserFromBearer(request: Request): Promise<User | null> {

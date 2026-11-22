@@ -27,6 +27,13 @@ export const employeePortalService = {
     });
   },
 
+  getBreakdown(periodId: string) {
+    return employeeApiClient.get<unknown, ApiResponse<KpiResultBreakdown>>(
+      "/kpi-results/breakdown",
+      { params: { periodId } },
+    );
+  },
+
   getBreakdownById(id: string) {
     return employeeApiClient.get<unknown, ApiResponse<KpiResultBreakdown>>(
       `/kpi-results/${id}/breakdown`,

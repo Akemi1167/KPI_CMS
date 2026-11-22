@@ -123,6 +123,7 @@ export type Dictionary = {
       allPeriods: string;
       viewDetail: string;
       forbidden: string;
+      penaltyTitle: string;
     };
   };
   dashboard: {
@@ -294,6 +295,7 @@ export type Dictionary = {
       eventType: string;
       eventCount: string;
       runningScore: string;
+      reason: string;
       emptyBonus: string;
       emptyPenalty: string;
       emptyStats: string;

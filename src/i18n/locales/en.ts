@@ -132,11 +132,12 @@ export const en: Dictionary = {
     },
     myKpi: {
       title: "My KPI",
-      description: "View your KPI results by period",
+      description: "View your KPI score and the reason for each penalty",
       empty: "No KPI results yet.",
       allPeriods: "All periods",
       viewDetail: "Details",
       forbidden: "You cannot view this result.",
+      penaltyTitle: "Bonus and penalty notes",
     },
   },
   dashboard: {
@@ -316,6 +317,7 @@ export const en: Dictionary = {
       eventType: "Event type",
       eventCount: "Count",
       runningScore: "Running score",
+      reason: "Reason",
       emptyBonus: "No bonus events.",
       emptyPenalty: "No penalty events.",
       emptyStats: "No statistics yet.",

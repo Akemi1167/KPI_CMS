@@ -174,7 +174,7 @@ export function KpiEventsPage() {
         {loading ? (
           <tbody>
             <tr>
-              <td colSpan={7} className="px-4 py-8 text-center text-[13px] text-text-muted">
+              <td colSpan={8} className="px-4 py-8 text-center text-[13px] text-text-muted">
                 {dict.common.loading}
               </td>
             </tr>
@@ -188,6 +188,7 @@ export function KpiEventsPage() {
               <DataTableHeaderCell>{dict.kpiEvents.points}</DataTableHeaderCell>
               <DataTableHeaderCell>{dict.kpiEvents.total}</DataTableHeaderCell>
               <DataTableHeaderCell>{dict.kpiEvents.occurredAt}</DataTableHeaderCell>
+              <DataTableHeaderCell>{dict.kpiEvents.note}</DataTableHeaderCell>
               <DataTableHeaderCell align="right">{dict.common.actions}</DataTableHeaderCell>
             </DataTableHead>
             <DataTableBody>
@@ -206,6 +207,9 @@ export function KpiEventsPage() {
                   </DataTableCell>
                   <DataTableCell className="text-text-muted">
                     {formatDate(event.occurredAt, locale)}
+                  </DataTableCell>
+                  <DataTableCell className="max-w-[280px] whitespace-pre-wrap text-text-secondary">
+                    {event.note?.trim() || "—"}
                   </DataTableCell>
                   <DataTableCell align="right">
                     <Button

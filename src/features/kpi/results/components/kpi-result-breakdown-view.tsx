@@ -54,6 +54,7 @@ function EventList({ events, empty }: { events: KpiEvent[]; empty: string }) {
         <DataTableHeaderCell>{dict.kpiEvents.quantity}</DataTableHeaderCell>
         <DataTableHeaderCell>{dict.kpiEvents.total}</DataTableHeaderCell>
         <DataTableHeaderCell>{dict.kpiEvents.occurredAt}</DataTableHeaderCell>
+        <DataTableHeaderCell>{dict.kpiEvents.note}</DataTableHeaderCell>
       </DataTableHead>
       <DataTableBody>
         {events.map((event) => (
@@ -69,6 +70,9 @@ function EventList({ events, empty }: { events: KpiEvent[]; empty: string }) {
             <DataTableCell className="font-medium">{formatKpiPoint(event.totalPoints)}</DataTableCell>
             <DataTableCell className="text-text-muted">
               {formatDate(event.occurredAt, locale)}
+            </DataTableCell>
+            <DataTableCell className="max-w-[280px] whitespace-pre-wrap text-text-secondary">
+              {event.note?.trim() || "—"}
             </DataTableCell>
           </DataTableRow>
         ))}
@@ -92,6 +96,7 @@ export function KpiResultBreakdownView({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [tab, setTab] = useState<BreakdownTab>("bonus");
+  const [didPickInitialTab, setDidPickInitialTab] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -127,6 +132,14 @@ export function KpiResultBreakdownView({
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    if (!data || didPickInitialTab) return;
+    if (employeeMode && data.penaltyEvents.length > 0) {
+      setTab("penalty");
+    }
+    setDidPickInitialTab(true);
+  }, [data, didPickInitialTab, employeeMode]);
 
   if (loading) return <PageLoading />;
   if (error || !data) {
@@ -270,6 +283,7 @@ export function KpiResultBreakdownView({
               <DataTableHeaderCell>{dict.common.name}</DataTableHeaderCell>
               <DataTableHeaderCell>{dict.kpiEvents.points}</DataTableHeaderCell>
               <DataTableHeaderCell>{dict.kpiEvents.total}</DataTableHeaderCell>
+              <DataTableHeaderCell>{dict.kpiEvents.note}</DataTableHeaderCell>
               <DataTableHeaderCell align="right">{b.runningScore}</DataTableHeaderCell>
             </DataTableHead>
             <DataTableBody>
@@ -285,6 +299,9 @@ export function KpiResultBreakdownView({
                     </Badge>
                   </DataTableCell>
                   <DataTableCell>{formatKpiPoint(entry.totalPoints)}</DataTableCell>
+                  <DataTableCell className="max-w-[280px] whitespace-pre-wrap text-text-secondary">
+                    {entry.note?.trim() || "—"}
+                  </DataTableCell>
                   <DataTableCell align="right" className="font-medium">
                     {entry.runningFinalScore}
                   </DataTableCell>
